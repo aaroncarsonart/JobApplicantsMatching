@@ -4,6 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * Our java code for the Final Project of MTH 354.
+ * @author Aaron Carson, Sam Wetzel, Jonathan Elliot
+ * @version Dec 4, 2015
+ */
 public class Main
 {	
 	// assume input of "A B C D" "1 2 3 4" "A,1,5 A,2,20"
@@ -13,7 +18,6 @@ public class Main
 	
 	/**
 	 * Vertices hold all info needed for our marking.
-	 * @author Aaron Carson
 	 * @version Dec 2, 2015
 	 */
 	public static class Vertex
@@ -33,7 +37,6 @@ public class Main
 	
 	/**
 	 * Edges hold all info needed for the marking algorithm.
-	 * @author Aaron Carson
 	 * @version Dec 2, 2015
 	 */
 	public static class Edge
