@@ -39,7 +39,7 @@ public class Main
 	public static int		COUNT		= 0;		// for counting permutations
 	
 	public static String    INDENT      = "    ";
-	public static boolean	DEBUG       = false;
+	public static boolean	DEBUG       = true;
 	
 	
 	/**
@@ -356,6 +356,9 @@ public class Main
 		System.out.println("----------------------------------");
 		System.out.printf("total permutations: %d\n", m.count);
 		System.out.printf("running time:       %.3f s\n", time / 1000.0);
+		System.out.println();
+		System.out.println("Maximal Matching:");
+		System.out.println("--------------------------");
 		printMatching(m);
 	}
 	
@@ -432,14 +435,14 @@ public class Main
 		System.out.println("=============================================");
 		printVertices(m.applicantOrdering, "Applicant ordering: ");
 		printVertices(m.jobOrdering,       "Job ordering:       ");
-		System.out.println("Vertices:");
-		for(Vertex v : m.vertices){
-			System.out.printf("%8s:(%s,%s)\n", v.name, v.predecessor, v.name == SOURCE ? "∞" : "" + v.value);
-		}
-		System.out.println("Edges:");
-		for(Edge e : m.edges){
-			System.out.printf("%8s --> %-8s (flow: %d, weight: %d)\n", e.tailVertex, e.headVertex, e.flow, e.weight);
-		}
+		//System.out.println("Vertices:");
+		//for(Vertex v : m.vertices){
+		//	System.out.printf("%8s:(%s,%s)\n", v.name, v.predecessor, v.name == SOURCE ? "∞" : "" + v.value);
+		//}
+		//System.out.println("Edges:");
+		//for(Edge e : m.edges){
+		//	System.out.printf("%8s --> %-8s (flow: %d, weight: %d)\n", e.tailVertex, e.headVertex, e.flow, e.weight);
+		//}
 		}
 		// -----------------------------------------------
 		// 1. Visit each vertex with the network flow 
@@ -448,7 +451,7 @@ public class Main
 		Vertex result = null;
 		while (result != m.source) 
 		{
-			if(DEBUG) System.out.println("visit();");
+			if(DEBUG) System.out.println("\nvisit();");
 			// always returns the sink for a successful pass.
 			result = visit(m.source, m, 0);
 		}
@@ -461,10 +464,11 @@ public class Main
 		// count marked edges and weights.
 		int edgeCount = 0;
 		int weightSum = 0;
+		if(DEBUG) System.out.println("\nVisited Edges\n--------------");
 		for(Edge e : m.edges) {
 			if(DEBUG) 
 				if (e.flow > 0) 
-					System.out.printf("%d. %8s ---(flow: %d weight: %2d)---> %s\n", m.count, e.tailVertex, e.flow, e.weight, e.headVertex);
+					System.out.printf("%8s ---(flow: %d weight: %2d)---> %s\n", e.tailVertex, e.flow, e.weight, e.headVertex);
 			
 			if(e.weight > 0) {
 				edgeCount += e.flow;
@@ -473,8 +477,9 @@ public class Main
 			
 		}
 		if(DEBUG) {
-			System.out.println(m.count + " edgeCount: " + edgeCount);
-			System.out.println(m.count + " weightSum: " + weightSum);
+			System.out.println();	
+			System.out.println("edgeCount: " + edgeCount);
+			System.out.println("weightSum: " + weightSum);
 		}
 		
 		
@@ -500,13 +505,16 @@ public class Main
 			// report for debugging.
 			if(DEBUG) 
 			{
-				System.out.println("Found new matching.");
-				System.out.printf("Permutation: %d\n", m.count);
-				printVertices(m.applicantOrdering, "    Applicant ordering: ");
-				printVertices(m.jobOrdering,       "    Job ordering:       ");
+				System.out.println("\nFound new matching.");
+				//System.out.printf("Permutation: %d\n", m.count);
+				//printVertices(m.applicantOrdering, "    Applicant ordering: ");
+				//printVertices(m.jobOrdering,       "    Job ordering:       ");
 				printMatching(m);
 				System.out.println("\n");
 			}	
+		}
+		else{
+			System.out.println("New matching was not better than previous.");
 		}
 		
 		// ---------------------------------------------
@@ -582,8 +590,8 @@ public class Main
 						//for (int j = 0; j < depth; j++) System.out.print(indent);
 						if(DEBUG) {
 							for (int j = 0; j < depth; j++) System.out.print(INDENT);
-							System.out.print(v.name);
-							System.out.println(" Done!");
+							//System.out.print(v.name);
+							//System.out.println(" Done!");
 						}
 						return m.sink;  // finished.
 					}
@@ -596,7 +604,15 @@ public class Main
 					}
 				}
 				else{
-					if(DEBUG) System.out.println(" Skip ...");
+					if(DEBUG){
+						System.out.print(" Skip ... "); 
+						if (v != e.headVertex) 
+							System.out.printf("(head is not %s)", v);
+						else if(e.flow == CAPACITY)
+							System.out.printf("(edge has been marked)");
+						System.out.println();
+								
+					}
 					continue;
 
 				}
